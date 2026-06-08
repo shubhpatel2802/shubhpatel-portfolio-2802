@@ -244,6 +244,53 @@
             border-color: #38bdf8;
         }
 
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .project-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            border-radius: 1.5rem;
+            padding: 1.6rem;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .project-card h3 {
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .project-card p {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .project-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            color: #7dd3fc;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .project-card a:hover {
+            color: #38bdf8;
+        }
+
         .edu-item {
             display: flex;
             flex-wrap: wrap;
@@ -661,6 +708,31 @@
         <div class="skills-grid">
             <span class="skill-badge">MS Office 365</span>
             <span class="skill-badge">Open Office</span>
+        </div>
+    </div>
+
+        <!-- Projects Section -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-folder-open"></i>
+            <span>Projects</span>
+        </div>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3><i class="fas fa-laptop-code"></i> Portfolio Website</h3>
+                <p>Designed and developed a responsive personal portfolio website to showcase projects, skills, achievements, and professional experience with a modern and engaging user interface.</p>
+                <a href="https://shubhpatel2802.github.io/shubhpatel-portfolio-2802/" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            </div>
+            <div class="project-card">
+                <h3><i class="fas fa-network-wired"></i> DESISTRONG GYM</h3>
+                <p>My GYM – A modern, responsive fitness website featuring membership plans, trainer profiles, workout programs, and contact sections. Designed with a premium UI/UX to provide an engaging experience across all devices.</p>
+                <a href="https://shubhpatel2802.github.io/GYM/" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            </div>
+            <div class="project-card">
+                <h3><i class="fas fa-database"></i> Pavitra Veg</h3>
+                <p>Restaurant Website – A modern and fully responsive restaurant website designed to showcase delicious menu items, special offers, chef recommendations, customer reviews, and contact information. Built with an attractive UI, smooth navigation, and mobile-friendly design to provide an engaging dining experience and strengthen the restaurant's online presence.</p>
+                <a href="https://shubhpatel2802.github.io/Restaurant/" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            </div>
         </div>
     </div>
 
