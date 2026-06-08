@@ -394,6 +394,99 @@
                 height: 130px;
             }
         }
+        /* Academic Qualification Section */
+
+.current-study {
+    background: linear-gradient(
+        135deg,
+        rgba(6, 182, 212, 0.2),
+        rgba(37, 99, 235, 0.2)
+    );
+    border-left: 4px solid #06b6d4;
+    padding: 1.2rem 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(4px);
+}
+
+.current-study i {
+    font-size: 2rem;
+    color: #06b6d4;
+}
+
+.current-study-text {
+    flex: 1;
+}
+
+.current-study-text strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.current-study-text p {
+    color: #cbd5e1;
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+.edu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 18px 20px;
+    margin-bottom: 15px;
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.edu-item:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.edu-degree {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.edu-detail {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+}
+
+.highlight-box {
+    background: rgba(234, 179, 8, 0.15);
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    border-left: 4px solid #eab308;
+    margin-top: 20px;
+}
+
+@media (max-width: 700px) {
+    .current-study {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .edu-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .edu-item div:last-child {
+        text-align: left !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -406,7 +499,7 @@
                 <div class="hero-info">
                     <h1>Shubh Dilipkumar Patel</h1>
                     <div class="hero-tagline">
-                        <i class="fas fa-code"></i> Fresher · 3D Interactive Portfolio
+                        <i class="fas fa-code"></i> Fresher
                     </div>
                     <div class="contact-row">
                         <span><i class="fas fa-map-marker-alt"></i> E-1,703, Prayosha Star, Surat</span>
@@ -437,47 +530,83 @@
         </div>
 
         <!-- Academic Qualification -->
-        <div class="section-card">
-            <div class="section-title">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Academic Qualification</span>
+<div class="section-card">
+    <div class="section-title">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Academic Qualification</span>
+    </div>
+
+    <!-- Current Study -->
+    <div class="current-study">
+        <i class="fas fa-chalkboard-user"></i>
+
+        <div class="current-study-text">
+            <strong>🎓 Bachelor of Engineering (Information Technology)</strong>
+            <p>Apollo Institute of Engineering & Technology, Nava Naroda, Enasan, Ahmedabad, Gujarat · GTU</p>
+            <p>
+                <i class="fas fa-calendar-alt"></i>
+                2025 - 2028 (Pursuing)
+            </p>
+        </div>
+
+        <span class="skill-badge"
+            style="background: rgba(6,182,212,0.25); color:white;">
+            <i class="fas fa-book-open"></i>
+            In Progress
+        </span>
+    </div>
+
+    <!-- Diploma -->
+    <div class="edu-item">
+        <div>
+            <div class="edu-degree">
+                Diploma in Information Technology
             </div>
-            
-            <div class="current-study">
-                <i class="fas fa-chalkboard-user"></i>
-                <div class="current-study-text">
-                <strong>🎓 Bachelor of Engineering in Information Technology</strong>
-                <p>Ahmedabad, Gujarat</p>
-                <p style="font-size: 0.85rem; margin-top: 4px;"><i class="fas fa-calendar-alt"></i> 2025 - 2028 (Pursuing)</p>
-            </div>
-                <span class="skill-badge" style="background: rgba(6, 182, 212, 0.2); color: white;"><i class="fas fa-book-open"></i> In Progress</span>
-            </div>
-            
-            <div class="edu-item">
-                <div>
-                    <div class="edu-degree">Diploma in Information Technology</div>
-                    <div class="edu-detail">N.G. Patel Polytechnic, Bardoli, Surat · GTU</div>
-                </div>
-                <div style="text-align: right;">
-                    <strong>2025</strong><br>
-                    <span class="skill-badge">Sem 5 CGPA: 7.28</span>
-                </div>
-            </div>
-            <div class="edu-item">
-                <div>
-                    <div class="edu-degree">Secondary School Certificate (SSC)</div>
-                    <div class="edu-detail">K.S.K.P. School, Bhatar · GSHSEB</div>
-                </div>
-                <div style="text-align: right;">
-                    <strong>2022</strong><br>
-                    <span class="skill-badge">70.67%</span>
-                </div>
-            </div>
-            <div class="highlight-box">
-                <i class="fas fa-star-of-life" style="margin-right: 8px; color: #eab308;"></i> 
-                <strong>Fresher</strong> · Ready to contribute with strong fundamentals in programming & web technologies.
+
+            <div class="edu-detail">
+                N.G. Patel Polytechnic, Bardoli, Surat · GTU
             </div>
         </div>
+
+        <div style="text-align:right;">
+            <strong>2025</strong><br><br>
+
+            <span class="skill-badge">
+                Sem 5 CGPA : 7.28
+            </span>
+        </div>
+    </div>
+
+    <!-- SSC -->
+    <div class="edu-item">
+        <div>
+            <div class="edu-degree">
+                Secondary School Certificate (SSC)
+            </div>
+
+            <div class="edu-detail">
+                K.S.K.P. School, Bhatar · GSHSEB
+            </div>
+        </div>
+
+        <div style="text-align:right;">
+            <strong>2022</strong><br><br>
+
+            <span class="skill-badge">
+                70.67%
+            </span>
+        </div>
+    </div>
+
+    <!-- Highlight -->
+    <div class="highlight-box">
+        <i class="fas fa-star"></i>
+
+        <strong>Fresher</strong> · Ready to contribute with strong
+        fundamentals in Programming, Web Development,
+        Databases and Modern Technologies.
+    </div>
+</div>
 
         <!-- Technical Knowledge Section -->
     <div class="section-card">
