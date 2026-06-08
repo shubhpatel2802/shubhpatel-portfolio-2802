@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Shubh Patel · 3D Portfolio</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="Image/Photo.jpg">
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* Canvas 3D Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(circle at center, #0a0a2a 0%, #050510 100%);
+        }
+
+        /* Content Layer */
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Glass Morphism Effect */
+        .glass {
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.1) inset;
+        }
+
+        .hero {
+            padding: 2rem 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .hero:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.5);
+        }
+
+        .hero-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            justify-content: space-between;
+        }
+
+        .hero-info {
+            flex: 2;
+        }
+
+        .hero-info h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(120deg, #ffffff, #7dd3fc, #38bdf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            border-left: 3px solid #38bdf8;
+            padding-left: 0.8rem;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.2rem 0 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .contact-row a, .contact-row span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .contact-row a:hover {
+            color: #7dd3fc;
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+        }
+
+        /* Profile Photo 3D Circle */
+        .profile-photo-wrapper {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(56, 189, 248, 0.4);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .profile-photo-wrapper:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 30px 50px -12px rgba(56, 189, 248, 0.6);
+        }
+        
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .photo-fallback {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(56, 189, 248, 0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 1.5rem;
+            padding: 1.8rem 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #38bdf8;
+            padding-left: 1rem;
+        }
+
+        .section-title i {
+            color: #38bdf8;
+            font-size: 1.6rem;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-badge {
+            background: rgba(56, 189, 248, 0.15);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #b0e0ff;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            transition: all 0.2s;
+        }
+
+        .skill-badge i {
+            margin-right: 6px;
+        }
+
+        .skill-badge:hover {
+            background: rgba(56, 189, 248, 0.3);
+            transform: scale(1.05);
+            border-color: #38bdf8;
+        }
+
+        .edu-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 1rem 0;
+        }
+        
+        .edu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .edu-degree {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .edu-detail {
+            color: #cbd5e1;
+        }
+
+        .current-study {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(37, 99, 235, 0.2));
+            border-left: 4px solid #06b6d4;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(4px);
+        }
+        
+        .current-study i {
+            font-size: 1.8rem;
+            color: #06b6d4;
+        }
+        
+        .current-study-text {
+            flex: 1;
+        }
+        
+        .current-study-text strong {
+            font-size: 1rem;
+        }
+        
+        .current-study-text p {
+            color: #cbd5e1;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .cert-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .cert-item {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid #3b82f6;
+            transition: all 0.2s;
+        }
+        
+        .cert-item:hover {
+            background: rgba(56, 189, 248, 0.2);
+            transform: translateX(8px);
+        }
+        
+        .cert-item i {
+            font-size: 1.2rem;
+            color: #38bdf8;
+        }
+        
+        .objective-text {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.2rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            border-left: 4px solid #38bdf8;
+        }
+        
+        hr {
+            margin: 1rem 0;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, rgba(56, 189, 248, 0.3), transparent);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            font-size: 0.8rem;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .highlight-box {
+            background: rgba(234, 179, 8, 0.15);
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            border-left: 3px solid #eab308;
+            margin-top: 1rem;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a2a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 700px) {
+            .hero-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-info h1 {
+                font-size: 2rem;
+            }
+            .contact-row {
+                justify-content: center;
+            }
+            .section-card {
+                padding: 1.2rem;
+            }
+            .profile-photo-wrapper {
+                width: 130px;
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <!-- Hero Section -->
+        <div class="hero glass">
+            <div class="hero-inner">
+                <div class="hero-info">
+                    <h1>Shubh Dilipkumar Patel</h1>
+                    <div class="hero-tagline">
+                        <i class="fas fa-code"></i> Fresher · 3D Interactive Portfolio
+                    </div>
+                    <div class="contact-row">
+                        <span><i class="fas fa-map-marker-alt"></i> E-1,703, Prayosha Star, Surat</span>
+                        <a href="tel:+916352248588"><i class="fas fa-phone"></i> +91 6352248588</a>
+                        <a href="mailto:shubhpatel2802@gmail.com"><i class="fas fa-envelope"></i> shubhpatel2802@gmail.com</a>
+                        <a href="https://www.linkedin.com/in/shubh-patel-1978d/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    </div>
+                    <div class="location-badge">
+                        <i class="fas fa-university"></i> B.E. in Information Technology · Ahmedabad
+                    </div>
+                </div>
+                <div class="profile-photo-wrapper" id="profileWrapper">
+                    <img src="Image/Photo.jpg" alt="Shubh Patel" class="profile-photo" id="profileImg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Objective -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-bullseye"></i>
+                <span>Career Objective</span>
+            </div>
+            <div class="objective-text">
+                <i class="fas fa-quote-left" style="margin-right: 8px; opacity: 0.7;"></i>
+                To work in challenging and dynamic environment and to keep adding value to organization that I represent and serve, while also concurrently upgrading my skills and knowledge.
+            </div>
+        </div>
+
+        <!-- Academic Qualification -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Academic Qualification</span>
+            </div>
+            
+            <div class="current-study">
+                <i class="fas fa-chalkboard-user"></i>
+                <div class="current-study-text">
+                <strong>🎓 Bachelor of Engineering in Information Technology</strong>
+                <p>Ahmedabad, Gujarat</p>
+                <p style="font-size: 0.85rem; margin-top: 4px;"><i class="fas fa-calendar-alt"></i> 2025 - 2028 (Pursuing)</p>
+            </div>
+                <span class="skill-badge" style="background: rgba(6, 182, 212, 0.2); color: white;"><i class="fas fa-book-open"></i> In Progress</span>
+            </div>
+            
+            <div class="edu-item">
+                <div>
+                    <div class="edu-degree">Diploma in Information Technology</div>
+                    <div class="edu-detail">N.G. Patel Polytechnic, Bardoli, Surat · GTU</div>
+                </div>
+                <div style="text-align: right;">
+                    <strong>2025</strong><br>
+                    <span class="skill-badge">Sem 5 CGPA: 7.28</span>
+                </div>
+            </div>
+            <div class="edu-item">
+                <div>
+                    <div class="edu-degree">Secondary School Certificate (SSC)</div>
+                    <div class="edu-detail">K.S.K.P. School, Bhatar · GSHSEB</div>
+                </div>
+                <div style="text-align: right;">
+                    <strong>2022</strong><br>
+                    <span class="skill-badge">70.67%</span>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <i class="fas fa-star-of-life" style="margin-right: 8px; color: #eab308;"></i> 
+                <strong>Fresher</strong> · Ready to contribute with strong fundamentals in programming & web technologies.
+            </div>
+        </div>
+
+        <!-- Technical Knowledge Section -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-microchip"></i>
+            <span>Technical Knowledge</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between;">
+            <div style="flex: 1;">
+                <h4 style="margin-bottom: 12px;"><i class="fab fa-python"></i> Programming Languages</h4>
+                <div class="skills-grid">
+                    <span class="skill-badge"><i class="fab fa-python"></i> Python</span>
+                    <span class="skill-badge"><i class="fab fa-js"></i> JavaScript</span>
+                    <span class="skill-badge"><i class="fab fa-html5"></i> HTML5</span>
+                    <span class="skill-badge"><i class="fab fa-css3-alt"></i> CSS3</span>
+                    <span class="skill-badge"><i class="fas fa-code"></i> PHP</span>
+                    <span class="skill-badge"><i class="fas fa-copyright"></i> C / C++</span>
+                </div>
+                <h4 style="margin: 20px 0 12px 0;"><i class="fas fa-tools"></i> Frameworks & Web Dev</h4>
+                <div class="skills-grid">
+                    <span class="skill-badge">Node.js</span>
+                    <span class="skill-badge">Vue.js</span>
+                    <span class="skill-badge">Web Development</span>
+                    <span class="skill-badge">Responsive Design</span>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin-bottom: 12px;"><i class="fas fa-database"></i> Databases & Tools</h4>
+                <div class="skills-grid">
+                    <span class="skill-badge"><i class="fas fa-database"></i> XAMPP</span>
+                    <span class="skill-badge"><i class="fas fa-server"></i> Ampps</span>
+                    <span class="skill-badge">MySQL</span>
+                </div>
+                <h4 style="margin: 20px 0 12px 0;"><i class="fas fa-laptop-code"></i> IDEs & Editors</h4>
+                <div class="skills-grid">
+                    <span class="skill-badge">Visual Studio</span>
+                    <span class="skill-badge">Python IDLE</span>
+                    <span class="skill-badge">Notepad++</span>
+                    <span class="skill-badge">Trae</span>
+                    <span class="skill-badge">Command Prompt (CMD)</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h4><i class="fas fa-desktop"></i> Operating Systems</h4>
+        <div class="skills-grid">
+            <span class="skill-badge">Windows 7/10/11</span>
+            <span class="skill-badge">Linux Mint</span>
+            <span class="skill-badge">Kali Linux</span>
+        </div>
+        <h4 style="margin: 16px 0 8px 0;"><i class="fas fa-file-excel"></i> Office Suite</h4>
+        <div class="skills-grid">
+            <span class="skill-badge">MS Office 365</span>
+            <span class="skill-badge">Open Office</span>
+        </div>
+    </div>
+
+        <!-- Certifications & Internships Section -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-certificate"></i>
+            <span>Certifications & Internships</span>
+        </div>
+        <div class="cert-list">
+            <div class="cert-item"><i class="fab fa-python"></i> 15 days Python Internship – Tops Technology</div>
+            <div class="cert-item"><i class="fas fa-globe"></i> 30 days Web Development Internship – IIHT</div>
+            <div class="cert-item"><i class="fab fa-python"></i> Python Course – MOLMEH TECHNOLABS</div>
+            <div class="cert-item"><i class="fas fa-code"></i> C, C++ Course – Jay Sai Computer Institute</div>
+            <div class="cert-item"><i class="fas fa-shield-alt"></i> Cyber Crime Course – Coursera</div>
+            <div class="cert-item"><i class="fab fa-js"></i> 2 Months JavaScript Development Internship (Node.js, Vue.js) – Aliter</div>
+        </div>
+        <div class="highlight-box">
+                <i class="fas fa-laptop" style="margin-right: 8px; color: #eab308;"></i> 
+                <strong>Extra:</strong> Hands-on experience with XAMPP, Ampps, Linux environments, and modern web stacks.
+            </div>
+    </div>
+
+        <!-- Core Competencies -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-cogs"></i>
+                <span>Core Competencies</span>
+            </div>
+            <div class="skills-grid">
+                <span class="skill-badge"><i class="fas fa-laptop-code"></i> Full Stack Basics</span>
+                <span class="skill-badge"><i class="fas fa-database"></i> DBMS (MySQL / XAMPP)</span>
+                <span class="skill-badge"><i class="fab fa-linux"></i> Linux & Terminal</span>
+                <span class="skill-badge"><i class="fas fa-brain"></i> Problem Solving</span>
+                <span class="skill-badge"><i class="fas fa-mobile-alt"></i> Responsive Web Design</span>
+                <span class="skill-badge"><i class="fas fa-users"></i> Team Collaboration</span>
+                <span class="skill-badge"><i class="fas fa-rocket"></i> Quick Learner</span>
+                <span class="skill-badge"><i class="fas fa-cube"></i> 3D Web (Three.js)</span>
+                <span class="skill-badge"><i class="fas fa-comments"></i> Communication</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+    <div class="footer-note">
+        <i class="far fa-copyright"></i> 2026 Shubh Patel · Professional Portfolio<br>
+        <span style="margin-top: 8px; display: inline-block;">📍 Surat, India | Currently pursuing B.E. in Information Technology at Ahmedabad</span>
+        <div style="margin-top: 10px; font-size: 0.75rem;">
+            <i class="fas fa-envelope"></i> shubhpatel2802@gmail.com | <i class="fas fa-phone"></i> +91 6352248588
+        </div>
+    </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Setup Scene, Camera, Renderer
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = null; // transparent to let CSS gradient show
+        scene.fog = new THREE.FogExp2(0x050510, 0.008);
+        
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 8);
+        camera.lookAt(0, 0, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 10, 7);
+        scene.add(directionalLight);
+        
+        const backLight = new THREE.PointLight(0x2563eb, 0.5);
+        backLight.position.set(-2, 1, -3);
+        scene.add(backLight);
+        
+        const fillLight = new THREE.PointLight(0x38bdf8, 0.3);
+        fillLight.position.set(2, 3, 4);
+        scene.add(fillLight);
+        
+        // Main Central Object: Rotating Geometric Torus Knot with glow effect
+        const geometry = new THREE.TorusKnotGeometry(0.9, 0.25, 200, 32, 3, 4);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x38bdf8,
+            emissive: 0x0f3a6a,
+            emissiveIntensity: 0.6,
+            metalness: 0.7,
+            roughness: 0.3,
+            wireframe: false
+        });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+        
+        // Add wireframe version inside for extra depth
+        const wireframeMat = new THREE.MeshBasicMaterial({ color: 0x7dd3fc, wireframe: true, transparent: true, opacity: 0.2 });
+        const torusWire = new THREE.Mesh(geometry, wireframeMat);
+        torusWire.scale.set(1.05, 1.05, 1.05);
+        scene.add(torusWire);
+        
+        // Floating particles system
+        const particleCount = 1500;
+        const particlesGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 30;
+            positions[i*3+1] = (Math.random() - 0.5) * 20;
+            positions[i*3+2] = (Math.random() - 0.5) * 25 - 10;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            color: 0x38bdf8,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleSystem);
+        
+        // Second particle system - stars background effect
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsPositions = new Float32Array(2000 * 3);
+        for (let i = 0; i < 2000; i++) {
+            starsPositions[i*3] = (Math.random() - 0.5) * 200;
+            starsPositions[i*3+1] = (Math.random() - 0.5) * 100;
+            starsPositions[i*3+2] = (Math.random() - 0.5) * 80 - 40;
+        }
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
+        const starsMaterial = new THREE.PointsMaterial({ color: 0x88aaff, size: 0.03, transparent: true, opacity: 0.4 });
+        const starsSystem = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(starsSystem);
+        
+        // Small orbiting spheres around the knot
+        const orbCount = 12;
+        const orbiters = [];
+        for (let i = 0; i < orbCount; i++) {
+            const orbGeo = new THREE.SphereGeometry(0.08, 16, 16);
+            const orbMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, emissive: 0x1e3a8a, emissiveIntensity: 0.5 });
+            const orb = new THREE.Mesh(orbGeo, orbMat);
+            scene.add(orb);
+            orbiters.push(orb);
+        }
+        
+        // Rotating ring around center
+        const ringGeo = new THREE.TorusGeometry(1.4, 0.03, 64, 300);
+        const ringMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x1e3a8a });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        scene.add(ring);
+        
+        const ring2Geo = new THREE.TorusGeometry(1.7, 0.02, 64, 300);
+        const ring2Mat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, emissive: 0x0f3a6a });
+        const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+        scene.add(ring2);
+        
+        // Animation variables
+        let time = 0;
+        
+        // Mouse interaction for subtle camera movement
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+        });
+        
+        // Animate
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+            
+            // Rotate main objects
+            torusKnot.rotation.x = time * 0.5;
+            torusKnot.rotation.y = time * 0.8;
+            torusWire.rotation.x = time * 0.5;
+            torusWire.rotation.y = time * 0.8;
+            
+            ring.rotation.x = Math.sin(time * 0.3) * 0.5;
+            ring.rotation.y = time * 0.4;
+            ring.rotation.z = time * 0.2;
+            
+            ring2.rotation.x = Math.cos(time * 0.4) * 0.3;
+            ring2.rotation.y = time * 0.6;
+            
+            // Rotate particles slowly
+            particleSystem.rotation.y = time * 0.05;
+            particleSystem.rotation.x = Math.sin(time * 0.1) * 0.1;
+            starsSystem.rotation.y = time * 0.02;
+            
+            // Animate orbiting spheres
+            orbiters.forEach((orb, idx) => {
+                const angle = time * 1.5 + (idx / orbCount) * Math.PI * 2;
+                const radius = 1.9;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const y = Math.sin(angle * 1.5) * 0.6;
+                orb.position.set(x, y, z);
+            });
+            
+            // Smooth camera follow based on mouse
+            const targetX = mouseX * 0.5;
+            const targetY = mouseY * 0.3;
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (-targetY - camera.position.y + 1.5) * 0.05;
+            camera.lookAt(0, 0.5, 0);
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Handle resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Image fallback
+        const profileImg = document.getElementById('profileImg');
+        if (profileImg) {
+            profileImg.onerror = function() {
+                const wrapper = document.getElementById('profileWrapper');
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.className = 'photo-fallback';
+                fallbackDiv.innerHTML = 'SP';
+                wrapper.innerHTML = '';
+                wrapper.appendChild(fallbackDiv);
+            };
+        }
+        
+        // LinkedIn link safety
+        const linkedinLink = document.querySelector('a[href*="linkedin"]');
+        if (linkedinLink) linkedinLink.setAttribute('target', '_blank');
+    </script>
+</body>
+</html>
